@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../property/add_property.dart';
 import 'landlord-profile.dart';
 
 // Landlord Home Page
@@ -175,7 +175,12 @@ class _LandlordHomePageState extends State<LandlordHomePage> {
                   "Add Property",
                   Icons.add_home,
                       () {
-                    print("Add Property tapped");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddPropertyScreen(),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -244,7 +249,14 @@ class _LandlordHomePageState extends State<LandlordHomePage> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddPropertyScreen(),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF7C3AED),
                   foregroundColor: Colors.white,
@@ -298,7 +310,6 @@ class _LandlordHomePageState extends State<LandlordHomePage> {
           ),
         ],
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

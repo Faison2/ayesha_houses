@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../landlord/landlord-home.dart';
 import '../renter/renter-home.dart';
 import 'create_account_screen.dart';
+import 'forgot_password.dart';
 import 'widgets/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -169,9 +169,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {
-                        // Handle forgot password
-                        print("Forgot password tapped");
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgotPasswordScreen(userRole: widget.userRole),
+                            ),
+                          );
                       },
                       child: const Text(
                         "Forgot Password?",

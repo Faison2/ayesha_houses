@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import '../landlord/landlord-home.dart';
 import '../renter/renter-home.dart';
 import 'widgets/custom_text_field.dart';
-import 'widgets/social_login_button.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  final String userRole;
+  final String? userRole;
 
-  const CreateAccountScreen({Key? key, required this.userRole}) : super(key: key);
+  const CreateAccountScreen({Key? key, this.userRole}) : super(key: key);
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
@@ -20,10 +19,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
+
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
   bool _isLoading = false;
   bool _agreeToTerms = false;
+  String? _selectedRole;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedRole = widget.userRole;
+  }
 
   @override
   void dispose() {
@@ -31,6 +40,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -47,7 +58,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   }
 
   Future<void> _createAccount() async {
-    if (_formKey.currentState!.validate() && _agreeToTerms) {
+    if (_formKey.currentState!.validate() && _agreeToTerms && _selectedRole != null) {
       setState(() {
         _isLoading = true;
       });
@@ -60,20 +71,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       });
 
       // Navigate based on user role after account creation
-      if (widget.userRole == 'landlord') {
+      if (_selectedRole == 'landlord') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => LandlordHomePage()),
         );
-      } else if (widget.userRole == 'renter') {
+      } else if (_selectedRole == 'renter') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => RenterHomePage()),
         );
       }
 
-      // Handle account creation success/failure
-      print("Account created for: ${_emailController.text}");
+      print("Account created for: ${_emailController.text} as $_selectedRole");
+    } else if (_selectedRole == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please select your role"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -133,6 +150,40 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                   const SizedBox(height: 40),
 
+                  // Role selection
+                  const Text(
+                    "I am a",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildRoleCard(
+                          title: "Landlord",
+                          subtitle: "I have properties to rent",
+                          icon: Icons.home_work_outlined,
+                          value: "landlord",
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildRoleCard(
+                          title: "Renter",
+                          subtitle: "I'm looking for a place",
+                          icon: Icons.person_outline,
+                          value: "renter",
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
                   // Full name field
                   CustomTextField(
                     controller: _nameController,
@@ -169,6 +220,41 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                   ),
 
                   const SizedBox(height: 16),
+
+                  // Conditional fields for landlord
+                  if (_selectedRole == 'landlord') ...[
+                    CustomTextField(
+                      controller: _phoneController,
+                      label: "Phone Number",
+                      hintText: "Enter your phone number",
+                      keyboardType: TextInputType.phone,
+                      prefixIcon: Icons.phone_outlined,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your phone number";
+                        }
+                        if (value.length < 10) {
+                          return "Please enter a valid phone number";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextField(
+                      controller: _addressController,
+                      label: "Address",
+                      hintText: "Enter your address",
+                      prefixIcon: Icons.location_on_outlined,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your address";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
 
                   // Password field
                   CustomTextField(
@@ -347,28 +433,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Social signup buttons
-                  SocialLoginButton(
-                    icon: Icons.g_mobiledata,
-                    text: "Sign up with Google",
-                    onPressed: () {
-                      print("Google signup tapped");
-                    },
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  SocialLoginButton(
-                    icon: Icons.facebook,
-                    text: "Sign up with Facebook",
-                    onPressed: () {
-                      print("Facebook signup tapped");
-                    },
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  // Sign in link
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -394,10 +458,86 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoleCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required String value,
+  }) {
+    final isSelected = _selectedRole == value;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedRole = value;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF7C3AED) : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: isSelected
+              ? [
+            BoxShadow(
+              color: const Color(0xFF7C3AED).withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            )
+          ]
+              : null,
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF7C3AED).withOpacity(0.1)
+                    : Colors.grey.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ? const Color(0xFF7C3AED) : Colors.grey.shade600,
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? const Color(0xFF7C3AED) : Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade600,
+                height: 1.3,
+              ),
+            ),
+          ],
         ),
       ),
     );

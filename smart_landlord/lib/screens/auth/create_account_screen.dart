@@ -97,8 +97,18 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: SafeArea(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Colors.white,
+              Color(0xFF7C3AED),
+            ],
+          ),
+        ),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -382,7 +392,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       onPressed:
                       (_isLoading || !_agreeToTerms) ? null : _createAccount,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF7C3AED),
+                        backgroundColor: Colors.white,
                         foregroundColor: Colors.white,
                         disabledBackgroundColor: Colors.grey.shade300,
                         elevation: 0,
@@ -405,6 +415,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
+                          color: Colors.black
                         ),
                       ),
                     ),
@@ -440,7 +451,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         Text(
                           "Already have an account? ",
                           style: TextStyle(
-                            color: Colors.grey.shade600,
+                            color: Colors.white,
                             fontSize: 16,
                           ),
                         ),
@@ -449,7 +460,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           child: const Text(
                             "Sign In",
                             style: TextStyle(
-                              color: Color(0xFF7C3AED),
+                              color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),

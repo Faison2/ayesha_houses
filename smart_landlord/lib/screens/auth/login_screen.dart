@@ -77,204 +77,234 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 40),
-
-                  // Welcome back text
-                  const Text(
-                    "Welcome Back!",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                      height: 1.2,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Color(0xFF7C3AED),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1,
                     ),
                   ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    "Sign in to continue to your account",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey.shade600,
-                      height: 1.4,
-                    ),
-                  ),
-
-                  const SizedBox(height: 48),
-
-                  // Email field
-                  CustomTextField(
-                    controller: _emailController,
-                    label: "Email",
-                    hintText: "Enter your email",
-                    keyboardType: TextInputType.emailAddress,
-                    prefixIcon: Icons.email_outlined,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your email";
-                      }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value)) {
-                        return "Please enter a valid email";
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Password field
-                  CustomTextField(
-                    controller: _passwordController,
-                    label: "Password",
-                    hintText: "Enter your password",
-                    isPassword: true,
-                    isPasswordVisible: _isPasswordVisible,
-                    prefixIcon: Icons.lock_outlined,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: Colors.grey.shade600,
-                      ),
-                      onPressed: _togglePasswordVisibility,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your password";
-                      }
-                      if (value.length < 6) {
-                        return "Password must be at least 6 characters";
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Forgot password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ForgotPasswordScreen(userRole: widget.userRole),
-                            ),
-                          );
-                      },
-                      child: const Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Color(0xFF7C3AED),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 250),
-
-                  // Login button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _login,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF7C3AED),
-                        foregroundColor: Colors.white,
-                        disabledBackgroundColor: Colors.grey.shade300,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                          AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                          : const Text(
-                        "Sign In",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Or divider
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: Colors.grey.shade300)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          "OR",
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Divider(color: Colors.grey.shade300)),
-                    ],
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Create account link
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Don't have an account? ",
+                        // Welcome back text
+                        const Text(
+                          "The Best In The Country",
                           style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 16,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                            height: 1.2,
                           ),
                         ),
-                        GestureDetector(
-                          onTap: _navigateToCreateAccount,
-                          child: const Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              color: Color(0xFF7C3AED),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+
+                        const SizedBox(height: 8),
+
+                        Text(
+                          "Sign in to continue to your account",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white.withOpacity(0.9),
+                            height: 1.4,
+                          ),
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        // Email field
+                        CustomTextField(
+                          controller: _emailController,
+                          label: "Email",
+                          hintText: "Enter your email",
+                          keyboardType: TextInputType.emailAddress,
+                          prefixIcon: Icons.email_outlined,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter your email";
+                            }
+                            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                .hasMatch(value)) {
+                              return "Please enter a valid email";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Password field
+                        CustomTextField(
+                          controller: _passwordController,
+                          label: "Password",
+                          hintText: "Enter your password",
+                          isPassword: true,
+                          isPasswordVisible: _isPasswordVisible,
+                          prefixIcon: Icons.lock_outlined,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.grey.shade600,
                             ),
+                            onPressed: _togglePasswordVisibility,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter your password";
+                            }
+                            if (value.length < 6) {
+                              return "Password must be at least 6 characters";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Forgot password
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForgotPasswordScreen(
+                                      userRole: widget.userRole),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Forgot Password?",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 32),
+
+                        // Login button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _login,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF7C3AED),
+                              disabledBackgroundColor: Colors.grey.shade300,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(28),
+                              ),
+                            ),
+                            child: _isLoading
+                                ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xFF7C3AED)),
+                              ),
+                            )
+                                : const Text(
+                              "Sign In",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Or divider
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Divider(
+                                    color: Colors.white.withOpacity(0.5))),
+                            Padding(
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                "OR",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                                child: Divider(
+                                    color: Colors.white.withOpacity(0.5))),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Create account link
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Don't have an account? ",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.9),
+                                  fontSize: 16,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: _navigateToCreateAccount,
+                                child: const Text(
+                                  "Sign Up",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
